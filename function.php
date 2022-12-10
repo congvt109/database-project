@@ -194,5 +194,3 @@ function validateUploadFile($file, $uploadPath) {
     $file['name'] =  $fileName . '.' . $fileType;
     return $file;
 }
-
-?>
