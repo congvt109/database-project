@@ -3,9 +3,9 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 <!------ Include the above in your HEAD tag ---------->
-<?php 
-    include 'header.php';
-    $user = $currentUser;
+<?php
+include 'header.php';
+$user = $currentUser;
 ?>
 
 <head>
@@ -127,7 +127,7 @@
   <div class="row">
     <div class="col-sm-4">
       <div class="text-center">
-        <h1> <?= $currentUser['first_name']." ".$currentUser['last_name']?> </h1>
+        <h1> <?= $currentUser['first_name'] . " " . $currentUser['last_name'] ?> </h1>
       </div>
     </div>
   </div>
@@ -145,35 +145,35 @@
 
 
       <?php
-                    $current_id = $currentUser['id'];
-                    $totalmoney = mysqli_query($con, "SELECT SUM(total) AS sum FROM orders 
+      $current_id = $currentUser['id'];
+      $totalmoney = mysqli_query($con, "SELECT SUM(total) AS sum FROM orders 
                     WHERE customer_id = $current_id");
-                    $totalmoney = mysqli_fetch_assoc($totalmoney);
+      $totalmoney = mysqli_fetch_assoc($totalmoney);
 
-                    $current_id = $currentUser['id'];
-                    $boughtbook = mysqli_query($con, "SELECT SUM(quantity) AS bought FROM orders INNER JOIN orders_details 
+      $current_id = $currentUser['id'];
+      $boughtbook = mysqli_query($con, "SELECT SUM(quantity) AS bought FROM orders INNER JOIN orders_details 
                     ON orders.id = orders_details.order_id 
                     WHERE customer_id = $current_id;");
-                    $boughtbook = mysqli_fetch_assoc($boughtbook);
-        
-                    $current_id = $currentUser['id'];
-                    $favorbook = mysqli_query($con, "SELECT COUNT(book_id) AS numbook FROM favorites WHERE customer_id = $current_id;");
-                    $favorbook = mysqli_fetch_assoc($favorbook);
-                ?>
+      $boughtbook = mysqli_fetch_assoc($boughtbook);
+
+      $current_id = $currentUser['id'];
+      $favorbook = mysqli_query($con, "SELECT COUNT(book_id) AS numbook FROM favorites WHERE customer_id = $current_id;");
+      $favorbook = mysqli_fetch_assoc($favorbook);
+      ?>
 
       <ul class="list-group">
         <li class="list-group-item text-muted">Hoạt động<i class="fa fa-dashboard fa-1x"></i></li>
         <li class="list-group-item text-right">
           <span class="pull-left"><strong>Tổng tiền đã chi</strong></span>
-          <?=number_format($totalmoney['sum'], 0, ",", ".") ?>đ
+          <?= number_format($totalmoney['sum'], 0, ",", ".") ?>đ
         </li>
         <li class="list-group-item text-right">
           <span class="pull-left"><strong>Số sách đã mua</strong></span>
-          <?=$boughtbook['bought']?>
+          <?= $boughtbook['bought'] ?>
         </li>
         <li class="list-group-item text-right">
           <span class="pull-left"><strong>Số sách đã yêu thích</strong></span>
-          <?=$favorbook['numbook']?>
+          <?= $favorbook['numbook'] ?>
         </li>
       </ul>
 
@@ -192,44 +192,11 @@
       <div class="tab-content">
         <div class="tab-pane active" id="home">
           <?php
-                            $error = false;
-                            if (isset($_GET['action']) && $_GET['action'] == 'edit'){
-                                // check mật khẩu cũ 
-                                if (isset($_POST['old_password']) && $_POST['old_password'] != $currentUser['password']){
-                                    <div class="content-container">
-                                            <div id="edit-notify" class="box-content">
-                                                <h1>Mật khẩu không thể để trống</h1>
-                                                <a class="link-button" href="uif_passedit.php">Quay lại</a>
-                                            </div>
-                                        </div>
-                                }
-                                if (isset($_POST['password']) && isset($_POST['password2'])){   //nếu tồn tại pass
-                                    if (!empty($_POST['password']) && !empty($_POST['password2'])){         //nếu 2 pass đều không rỗng 
-                                        if ( ($_POST['password'] == $_POST['password2'])){      //nếu mật khẩu khớp
-                                            $result = mysqli_query($con, "UPDATE `customers` SET 
-                                                `password` = MD5('" . $_POST['password'] ."'),
-                                                `last_updated` = NOW() 
-                                                 WHERE `customers`.`id` = " . $_POST['id'] . ";");
-                                                ?>
-          <div class="content-container">
-            <div id="edit-notify" class="box-content">
-              <h1>Đổi mật khẩu thành công</h1>
-              <a class="link-button" href="uif_passedit.php">Quay lại</a>
-            </div>
-          </div>
-          <?php
-                                        }else {                     //mật khẩu không khớp
-                                            ?>
-          <div class="content-container">
-            <div id="edit-notify" class="box-content">
-              <h1>Mật khẩu không trùng khớp</h1>
-              <a class="link-button" href="uif_passedit.php">Reset</a>
-            </div>
-          </div>
-          <?php 
-                                        }
-                                    }else{
-                                        ?>
+          $error = false;
+          if (isset($_GET['action']) && $_GET['action'] == 'edit') {
+            // check mật khẩu cũ 
+            if (isset($_POST['old_password']) && $_POST['old_password'] != $currentUser['password']) {
+          ?>
           <div class="content-container">
             <div id="edit-notify" class="box-content">
               <h1>Mật khẩu không thể để trống</h1>
@@ -237,10 +204,45 @@
             </div>
           </div>
           <?php
-                                    }
-                                }
-                            }else{
-                            ?>
+            }
+            if (isset($_POST['password']) && isset($_POST['password2'])) { //nếu tồn tại pass
+              if (!empty($_POST['password']) && !empty($_POST['password2'])) { //nếu 2 pass đều không rỗng
+                if (($_POST['password'] == $_POST['password2'])) { //nếu mật khẩu khớp
+                  $result = mysqli_query($con, "UPDATE `customers` SET
+          `password` = MD5('" . $_POST['password'] . "'),
+          `last_updated` = NOW()
+          WHERE `customers`.`id` = " . $_POST['id'] . ";");
+              ?>
+          <div class="content-container">
+            <div id="edit-notify" class="box-content">
+              <h1>Đổi mật khẩu thành công</h1>
+              <a class="link-button" href="uif_passedit.php">Quay lại</a>
+            </div>
+          </div>
+          <?php
+                } else {                     //mật khẩu không khớp
+                ?>
+          <div class="content-container">
+            <div id="edit-notify" class="box-content">
+              <h1>Mật khẩu không trùng khớp</h1>
+              <a class="link-button" href="uif_passedit.php">Reset</a>
+            </div>
+          </div>
+          <?php
+                }
+              } else {
+                ?>
+          <div class="content-container">
+            <div id="edit-notify" class="box-content">
+              <h1>Mật khẩu không thể để trống</h1>
+              <a class="link-button" href="uif_passedit.php">Quay lại</a>
+            </div>
+          </div>
+          <?php
+              }
+            }
+          } else {
+            ?>
           <form action="./uif_passedit.php?action=edit" method="Post" enctype="multipart/form-data" autocomplete="off"
             id="registrationForm">
 
@@ -287,8 +289,8 @@
             </div>
           </form>
           <?php
-                            }
-                            ?>
+          }
+          ?>
 
         </div>
         <!--/tab-pane-->
